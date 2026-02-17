@@ -10,6 +10,34 @@ Data Layer → API Repository ( API calls, response normalization to json, netwo
 
 ## Folder Structure
 
+src/
+├── presentation/
+│ ├── components/
+│ │ ├── PaginationPage.js
+│ │ ├── ProductList.js
+│ ├── PaginationControls.js
+│ └── SkeletonLoader.js
+│
+├── application/
+│ ├── paginationSlice.js
+│ ├── paginationThunks.js
+│ └── selectors.js
+│
+├── domain/
+│ └── PaginationService.js
+│
+├── data/
+│ └── ProductRepository.js
+│
+├── app/
+│ └── store.js
+│
+├── assets/
+│ └── image
+|
+└── utility/
+└── urlUtils.js
+
 ## Installation
 
 1. Clone Repository:
