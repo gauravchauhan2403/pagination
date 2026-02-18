@@ -1,27 +1,55 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setPage } from "../../application/paginationSlice";
-import { fetchProducts } from "../../application/paginationThunks";
-import { setPageToUrl } from "../../utility/urlUtils";
+import { setPage } from "../../app/slice";
 
-export const PaginationControls = () => {
+const PaginationControl = () => {
   const dispatch = useDispatch();
-  const { page } = useSelector((s) => s.pagination);
+  const { page, totalPages } = useSelector(
+    (state) => state.pagination
+  );
 
-  const goToPage = (newPage) => {
-    dispatch(setPage(newPage));
-    setPageToUrl(newPage);
-    dispatch(fetchProducts());
+  const selectPageHandler = (selectedPage) => {
+    if (
+      selectedPage >= 1 &&
+      selectedPage <= totalPages &&
+      selectedPage !== page
+    ) {
+      dispatch(setPage(selectedPage));
+    }
   };
 
+  if (!totalPages) return null;
+
   return (
-    <div className=" mt-7">
-      <button className=" p-2 font-medium text-blue-500 border-black focus:border-2 hover:text-blue-800 " disabled={page === 1} onClick={() => goToPage(page - 1)}>
+    <div className="Pagination mt-4">
+      <span
+        className="cursor-pointer"
+        onClick={() => selectPageHandler(page - 1)}
+      >
         Prev
-      </button>
+      </span>
 
-      <span className=" font-black"> Page {page} </span>
+      {[...Array(totalPages)].map((_, i) => (
+        <span
+          key={i}
+          className={
+            page === i + 1
+              ? "p-3 m-1 cursor-pointer border-2 bg-gray-200"
+              : "p-3 m-1 cursor-pointer"
+          }
+          onClick={() => selectPageHandler(i + 1)}
+        >
+          {i + 1}
+        </span>
+      ))}
 
-      <button className=" p-2 font-medium text-blue-500 border-black focus:border-2 hover:text-blue-800" onClick={() => goToPage(page + 1)}>Next</button>
+      <span
+        className="cursor-pointer"
+        onClick={() => selectPageHandler(page + 1)}
+      >
+        Next
+      </span>
     </div>
   );
 };
+
+export default PaginationControl;

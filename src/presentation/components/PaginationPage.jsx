@@ -1,25 +1,47 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { fetchProducts } from "../../application/paginationThunks";
-import { setPage } from "../../application/paginationSlice";
-import { getPageFromUrl } from "../../utility/urlUtils";
-import { ProductList } from "./ProductList";
-import { PaginationControls } from "./PaginationControls";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../../app/slice";
+import PaginationControl from "./PaginationControls";
+import { SkeletonLoader } from "./SkeletonLoader";
 
-export const PaginationPage = () => {
+const Pagination = () => {
   const dispatch = useDispatch();
 
+  const { products, page, loading, error } = useSelector(
+    (state) => state.pagination
+  );
+
   useEffect(() => {
-    const pageFromUrl = getPageFromUrl();
-    dispatch(setPage(pageFromUrl));
     dispatch(fetchProducts());
-  }, [dispatch]);
+  }, [dispatch, page]);
 
   return (
     <>
-      <h2 className=" font-bold text-3xl text-blue-700">Products</h2>
-      <ProductList />
-      <PaginationControls />
+      <div className="text-3xl font-bold">Pagination</div>
+
+      {loading && <SkeletonLoader />}
+      {error && <div>Error: {error}</div>}
+
+      {products.length > 0 && (
+        <div className="productsList flex justify-between flex-wrap">
+          {products.map((product) => (
+            <span
+              key={product.id}
+              className="border-2 p-2 m-2 w-52 cursor-pointer"
+            >
+              <img src={product.thumbnail} alt={product.title} />
+              <ul>
+                <li>{product.title}</li>
+                <li>{product.category}</li>
+              </ul>
+            </span>
+          ))}
+        </div>
+      )}
+
+      <PaginationControl />
     </>
   );
 };
+
+export default Pagination;

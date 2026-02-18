@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import paginationReducer from "../application/paginationSlice";
+import paginationReducer from "./slice";
 
 export const store = configureStore({
   reducer: {
